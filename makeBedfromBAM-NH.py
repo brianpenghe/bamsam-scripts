@@ -48,22 +48,22 @@ def FLAG(FLAG):
   
     return FLAGList
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 4:
-        print 'usage: python %s title BAMfilename chrom.sizes outputfilename [-stranded + | -] [-nomulti] [-notitle] [-mismatchesMD M] [-mismatches M] [-readLength min max] [-chr chrN1(,chrN2....)] [-uniqueBAM] [-noNH samtools]' % sys.argv[0]
+    if len(argv) < 4:
+        print 'usage: python %s title BAMfilename chrom.sizes outputfilename [-stranded + | -] [-nomulti] [-notitle] [-mismatchesMD M] [-mismatches M] [-readLength min max] [-chr chrN1(,chrN2....)] [-uniqueBAM] [-noNH samtools]' % argv[0]
         print '\tUse the -mismatches option to specify the maximum number of mismatches allowed for an alignment to be considered; use the -mimatchesMD option is mismatches are specified with the MD special tag'
         print '\tuse the -noNH option and supply a path to samtools in order to have the file converted to one that has NH tags'
         print '\tNote: Right now the script does not work with spliced reads and only produces BED6 files!!!'
         sys.exit(1)
     
     doTitle=True
-    if '-notitle' in sys.argv:
+    if '-notitle' in argv:
         doTitle=False
 
-    title = sys.argv[1]
-    BAM = sys.argv[2]
-    chrominfo=sys.argv[3]
+    title = argv[1]
+    BAM = argv[2]
+    chrominfo=argv[3]
     chromInfoList=[]
     linelist=open(chrominfo)
     for line in linelist:
@@ -72,10 +72,10 @@ def run():
         start=0
         end=int(fields[1])
         chromInfoList.append((chr,start,end))
-    outfilename = sys.argv[4]
+    outfilename = argv[4]
 
     doUniqueBAM = False
-    if '-uniqueBAM' in sys.argv:
+    if '-uniqueBAM' in argv:
         print 'will treat all alignments as unique'
         doUniqueBAM = True
         TotalReads = 0
@@ -89,10 +89,10 @@ def run():
             print 'file has NH tags'
             break
     except:
-        if '-noNH' in sys.argv:
+        if '-noNH' in argv:
             print 'no NH: tags in BAM file, will replace with a new BAM file with NH tags'
-            samtools = sys.argv[sys.argv.index('-noNH')+1]
-            BAMpreporcessingScript = sys.argv[0].rpartition('/')[0] + '/bamPreprocessing.py'
+            samtools = argv[argv.index('-noNH')+1]
+            BAMpreporcessingScript = argv[0].rpartition('/')[0] + '/bamPreprocessing.py'
             cmd = 'python ' + BAMpreporcessingScript + ' ' + BAM + ' ' + BAM + '.NH'
             os.system(cmd)
             cmd = 'rm ' + BAM
@@ -108,44 +108,44 @@ def run():
             sys.exit(1)
 
     doReadLength=False
-    if '-readLength' in sys.argv:
+    if '-readLength' in argv:
         doReadLength=True
-        minRL = int(sys.argv[sys.argv.index('-readLength')+1])
-        maxRL = int(sys.argv[sys.argv.index('-readLength')+2])
+        minRL = int(argv[argv.index('-readLength')+1])
+        maxRL = int(argv[argv.index('-readLength')+2])
         print 'will only consider reads between', minRL, 'and', maxRL, 'bp length'
 
     doMaxMMMD=False
-    if '-mismatchesMD' in sys.argv:
+    if '-mismatchesMD' in argv:
         doMaxMMMD=True
-        maxMM = int(sys.argv[sys.argv.index('-mismatchesMD')+1])
+        maxMM = int(argv[argv.index('-mismatchesMD')+1])
         print 'Will only consider alignments with', maxMM, 'or less mismatches'
 
     doMaxMM=False
-    if '-mismatches' in sys.argv:
+    if '-mismatches' in argv:
         doMaxMM=True
-        maxMM = int(sys.argv[sys.argv.index('-mismatches')+1])
+        maxMM = int(argv[argv.index('-mismatches')+1])
         print 'Will only consider alignments with', maxMM, 'or less mismatches'
 
     doChrSubset=False
-    if '-chr' in sys.argv:
+    if '-chr' in argv:
         doChrSubset=True
         WantedChrDict={}
-        for chr in sys.argv[sys.argv.index('-chr')+1].split(','):
+        for chr in argv[argv.index('-chr')+1].split(','):
             WantedChrDict[chr]=''
 
     noMulti=False
-    if '-nomulti' in sys.argv:
+    if '-nomulti' in argv:
         print 'will only consider unique alignments'
         noMulti=True
 
     doRPM=False
-    if '-RPM' in sys.argv:
+    if '-RPM' in argv:
         doRPM=True
 
     doStranded=False
-    if '-stranded' in sys.argv:
+    if '-stranded' in argv:
         doStranded=True
-        strand=sys.argv[sys.argv.index('-stranded')+1]
+        strand=argv[argv.index('-stranded')+1]
         print 'will only consider', strand, 'strand reads'
 
     samfile = pysam.Samfile(BAM, "rb" )
@@ -220,4 +220,5 @@ def run():
 
     outfile.close()
             
-run()
+if __name__ == '__main__':
+    main(sys.argv)

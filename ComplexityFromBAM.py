@@ -47,20 +47,20 @@ import sys
 import pysam
 from sets import Set
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 2:
-        print 'usage: python %s BAM chrom.sizes' % sys.argv[0]
+    if len(argv) < 2:
+        print 'usage: python %s BAM chrom.sizes' % argv[0]
         print '       BAM file has to be indexed'
         sys.exit(1)
 
-    SAM = sys.argv[1]
+    SAM = argv[1]
 
     CoverageDict={}
     CoverageDict['+'] = {}
     CoverageDict['-'] = {}
 
-    chrominfo=sys.argv[2]
+    chrominfo=argv[2]
     chromInfoList=[]
     linelist=open(chrominfo)
     for line in linelist:
@@ -153,4 +153,5 @@ def run():
     outline = SAM + '\t' + str(TotalUniqueReads) + '\t' + str(DistinctUniqueReads) + '\t' + str(DistinctUniqueReads/(TotalUniqueReads + 0.0))[0:4]
     print outline
 
-run()
+if __name__ == '__main__':
+    main(sys.argv)

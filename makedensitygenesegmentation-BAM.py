@@ -25,10 +25,10 @@ def countReads(samfile,chr,rmin,rmax,noMulti,CorrectionDict):
         reads += 1.0/CorrectionDict[ID]
     return reads
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 9:
-        print 'usage: python %s refGene.txt labelFields chrFieldID leftFieldID rightFieldID strandFieldID BAM chrom.sizes otufilename [-TSSupstream bp bins] [-TSSdownstream bp bins] [-genebodybins bins] [-3UTR bpdownstream bins]' % sys.argv[0]
+    if len(argv) < 9:
+        print 'usage: python %s refGene.txt labelFields chrFieldID leftFieldID rightFieldID strandFieldID BAM chrom.sizes otufilename [-TSSupstream bp bins] [-TSSdownstream bp bins] [-genebodybins bins] [-3UTR bpdownstream bins]' % argv[0]
         print "\tNote: labelFields comma-separated"
         print "\tNote: Genes that are shorter than the -TSSdownstream distance plus the number of genebodybins times the length of TSSdownstream bins will not be considered"
         print "\tDefault values: "
@@ -42,17 +42,17 @@ def run():
 
         sys.exit(1)
 
-    genes = sys.argv[1]
-    fields=sys.argv[2].split(',')
+    genes = argv[1]
+    fields=argv[2].split(',')
     LabelFields=[]
     for ID in fields:
         LabelFields.append(int(ID))
-    chrFieldID = int(sys.argv[3])
-    leftFieldID = int(sys.argv[4])
-    rightFieldID = int(sys.argv[5])
-    strandFieldID = int(sys.argv[6])
-    BAM = sys.argv[7]
-    chrominfo=sys.argv[8]
+    chrFieldID = int(argv[3])
+    leftFieldID = int(argv[4])
+    rightFieldID = int(argv[5])
+    strandFieldID = int(argv[6])
+    BAM = argv[7]
+    chrominfo=argv[8]
     chromInfoList=[]
     linelist=open(chrominfo)
     for line in linelist:
@@ -61,7 +61,7 @@ def run():
         start=0
         end=int(fields[1])
         chromInfoList.append((chr,start,end))
-    outfilename = sys.argv[9]
+    outfilename = argv[9]
 
     TSSupstreambp = 2000
     TSSupstreambins = 40
@@ -71,23 +71,23 @@ def run():
     UTRdownstreambp = 5000
     UTRdownstreambins = 50
 
-    if '-TSSupstream' in sys.argv:
-        TSSupstreambp = int(sys.argv[sys.argv.index('-TSSupstream') + 1])
-        TSSupstreambins = int(sys.argv[sys.argv.index('-TSSupstream') + 2])
-    if '-TSSdownstream' in sys.argv:
-        TSSdownstreambp = int(sys.argv[sys.argv.index('-TSSdownstream') + 1])
-        TSSdownstreambins = int(sys.argv[sys.argv.index('-TSSdownstream') + 2])
-    if '-genebodybins' in sys.argv:
-        genebodybins = int(sys.argv[sys.argv.index('-genebodybins')+1])
-    if '-zeros' in sys.argv:
+    if '-TSSupstream' in argv:
+        TSSupstreambp = int(argv[argv.index('-TSSupstream') + 1])
+        TSSupstreambins = int(argv[argv.index('-TSSupstream') + 2])
+    if '-TSSdownstream' in argv:
+        TSSdownstreambp = int(argv[argv.index('-TSSdownstream') + 1])
+        TSSdownstreambins = int(argv[argv.index('-TSSdownstream') + 2])
+    if '-genebodybins' in argv:
+        genebodybins = int(argv[argv.index('-genebodybins')+1])
+    if '-zeros' in argv:
         doZeros=True
-        zeros = float(sys.argv[sys.argv.index('-zeros')+1])
-    if '-3UTR' in sys.argv:
-        UTRdownstreambp = int(sys.argv[sys.argv.index('-3UTR')+1])
-        UTRdownstreambins = int(sys.argv[sys.argv.index('-3UTR')+2])
+        zeros = float(argv[argv.index('-zeros')+1])
+    if '-3UTR' in argv:
+        UTRdownstreambp = int(argv[argv.index('-3UTR')+1])
+        UTRdownstreambins = int(argv[argv.index('-3UTR')+2])
 
     noMulti=False
-    if '-nomulti' in sys.argv:
+    if '-nomulti' in argv:
         noMulti = True
 
     ReadDict={}
@@ -216,4 +216,5 @@ def run():
 
     outfile.close()
 
-run()
+if __name__ == '__main__':
+    main(sys.argv)

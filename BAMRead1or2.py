@@ -47,15 +47,15 @@ def FLAG(FLAG):
   
     return FLAGList
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 1:
-        print 'usage: python %s 1 | 2' % sys.argv[0]
+    if len(argv) < 1:
+        print 'usage: python %s 1 | 2' % argv[0]
         print '\tthe script will read from stdin (from samtools) and print to stdout'
         print '\t1 or 2 - read1 or read2'
         sys.exit(1)
 
-    read1or2 = sys.argv[1]
+    read1or2 = argv[1]
 
     input_stream = sys.stdin
     for line in input_stream:
@@ -66,4 +66,5 @@ def run():
         if 64 in FLAGfields and read1or2 == '1':
             print line.strip()
             
-run()
+if __name__ == '__main__':
+    main(sys.argv)

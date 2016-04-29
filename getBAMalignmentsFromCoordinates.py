@@ -11,15 +11,15 @@ import sys
 import string
 import math
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s bedfilename BAMfilename outputfilename' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s bedfilename BAMfilename outputfilename' % argv[0]
         sys.exit(1)
     
-    bed = sys.argv[1]
-    SAM = sys.argv[2]
-    outfilename = sys.argv[3]
+    bed = argv[1]
+    SAM = argv[2]
+    outfilename = argv[3]
 
     samfile = pysam.Samfile(SAM, "rb" )
     outfile = pysam.Samfile(outfilename, "wb", template=samfile)
@@ -38,4 +38,5 @@ def run():
 
     outfile.close()
    
-run()
+if __name__ == '__main__':
+    main(sys.argv)

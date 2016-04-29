@@ -13,22 +13,22 @@ import random
 import string
 from sets import Set
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s SAMfilename SAMTOOLS <Number Reads>' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s SAMfilename SAMTOOLS <Number Reads>' % argv[0]
         print '	Note1: do not run this code on SAM files where identical read IDs correspond to different reads'
         print '	      i.e. if for example reads come from lane1 of flowcell A and lane1 of flowcell B'
         print '	Note2: if reads are paired-end, the program will return the specified number of pairs, not individual reads'
         print '	Note3: the script will print alignments ot standard output - use samtools to capture them into a bam file'
         sys.exit(1)
 
-    SAM = sys.argv[1]
-    samtools = sys.argv[2]
-    numReads = int(sys.argv[3])
+    SAM = argv[1]
+    samtools = argv[2]
+    numReads = int(argv[3])
 
     doPaired=False
-    if '-paired' in sys.argv:
+    if '-paired' in argv:
         doPaired=True 
 
     i=0
@@ -96,4 +96,5 @@ def run():
         if SubSampleIDDict.has_key(ID):
             print line.strip()
 
-run()
+if __name__ == '__main__':
+    main(sys.argv)

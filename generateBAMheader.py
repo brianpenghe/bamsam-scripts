@@ -10,15 +10,15 @@ import sys
 import pysam
 import string
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s BAM chrom.sizes outfilename' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s BAM chrom.sizes outfilename' % argv[0]
         sys.exit(1)
 
-    BAM = sys.argv[1]
-    chromsizes = sys.argv[2]
-    outputfilename = sys.argv[3]
+    BAM = argv[1]
+    chromsizes = argv[2]
+    outputfilename = argv[3]
 
     ChrDict={}
     linelist = open(chromsizes)
@@ -50,5 +50,6 @@ def run():
             SeenDict[chr]=''
     outfile.close()
 
-run()
+if __name__ == '__main__':
+    main(sys.argv)
 

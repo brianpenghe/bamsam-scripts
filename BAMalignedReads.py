@@ -13,16 +13,16 @@ from sets import Set
 import os
 import subprocess
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 2:
-        print 'usage: python %s BAM samtools' % sys.argv[0]
+    if len(argv) < 2:
+        print 'usage: python %s BAM samtools' % argv[0]
         print '\tthe script will print to standard output - capture it with samtools and direct it to a bam file'
         print '\tspaces in optional fields will be treated as tabs'
         sys.exit(1)
 
-    BAM = sys.argv[1]
-    samtools = sys.argv[2]
+    BAM = argv[1]
+    samtools = argv[2]
 
     cmd = samtools + ' view -H ' + BAM
     p = os.popen(cmd, "r")
@@ -56,4 +56,5 @@ def run():
         if aligned:
             print line.strip()
     
-run()
+if __name__ == '__main__':
+    main(sys.argv)

@@ -52,10 +52,10 @@ import sys
 import pysam
 from sets import Set
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s BAM chrom.sizes outputfilename [-stranded] [-splices] [-withmulti]' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s BAM chrom.sizes outputfilename [-stranded] [-splices] [-withmulti]' % argv[0]
         print '       BAM file has to be indexed'
         print '       paired reads are not taken advantage of right now'
         print '       use the -splices option if you want spliced reads to be counted too; the spliced read will be assigned to the leftmost exon it covers'
@@ -63,9 +63,9 @@ def run():
         print '       the scripts needs an NH attribute in all alignments'
         sys.exit(1)
 
-    SAM = sys.argv[1]
-    outputfilename = sys.argv[3]
-    chrominfo=sys.argv[2]
+    SAM = argv[1]
+    outputfilename = argv[3]
+    chrominfo=argv[2]
     chromInfoList=[]
     linelist=open(chrominfo)
     for line in linelist:
@@ -79,13 +79,13 @@ def run():
     doMulti=False
     doStranded=False
 
-    if '-stranded' in sys.argv:
+    if '-stranded' in argv:
         doStranded=True
 
-    if '-withmulti' in sys.argv:
+    if '-withmulti' in argv:
         doMulti=True
 
-    if '-splices' in sys.argv:
+    if '-splices' in argv:
         doSpliced=True
 
     outfile=open(outputfilename, 'w')
@@ -167,4 +167,5 @@ def run():
 
     outfile.close()
 
-run()
+if __name__ == '__main__':
+    main(sys.argv)

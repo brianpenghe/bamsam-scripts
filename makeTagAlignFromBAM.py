@@ -48,14 +48,14 @@ def FLAG(FLAG):
   
     return FLAGList
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s BAMfilename chrom.sizes outputfilename [-uniqueBAM] [-nomulti] [-noNH samtools]' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s BAMfilename chrom.sizes outputfilename [-uniqueBAM] [-nomulti] [-noNH samtools]' % argv[0]
         sys.exit(1)
 
-    BAM = sys.argv[1]
-    chrominfo=sys.argv[2]
+    BAM = argv[1]
+    chrominfo=argv[2]
     chromInfoList=[]
     linelist=open(chrominfo)
     for line in linelist:
@@ -64,15 +64,15 @@ def run():
         start=0
         end=int(fields[1])
         chromInfoList.append((chr,start,end))
-    outfilename = sys.argv[3]
+    outfilename = argv[3]
 
     noMulti=False
-    if '-nomulti' in sys.argv:
+    if '-nomulti' in argv:
         print 'will only consider unique alignments'
         noMulti=True
 
     doUniqueBAM = False
-    if '-uniqueBAM' in sys.argv:
+    if '-uniqueBAM' in argv:
         print 'will treat all alignments as unique'
         doUniqueBAM = True
         TotalReads = 0
@@ -86,10 +86,10 @@ def run():
             print 'file has NH tags'
             break
     except:
-        if '-noNH' in sys.argv:
+        if '-noNH' in argv:
             print 'no NH: tags in BAM file, will replace with a new BAM file with NH tags'
-            samtools = sys.argv[sys.argv.index('-noNH')+1]
-            BAMpreporcessingScript = sys.argv[0].rpartition('/')[0] + '/bamPreprocessing.py'
+            samtools = argv[argv.index('-noNH')+1]
+            BAMpreporcessingScript = argv[0].rpartition('/')[0] + '/bamPreprocessing.py'
             cmd = 'python ' + BAMpreporcessingScript + ' ' + BAM + ' ' + BAM + '.NH'
             os.system(cmd)
             cmd = 'rm ' + BAM
@@ -141,4 +141,5 @@ def run():
 
     outfile.close()
             
-run()
+if __name__ == '__main__':
+    main(sys.argv)

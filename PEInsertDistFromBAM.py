@@ -47,28 +47,28 @@ def FLAG(FLAG):
   
     return FLAGList
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s BAMfilename chrom.sizes outputfilename [-nomulti] [-firstN number_pairs] [-chr chr1,...,chrN] [-regions file chrFiledID leftFieldID rightFieldID]' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s BAMfilename chrom.sizes outputfilename [-nomulti] [-firstN number_pairs] [-chr chr1,...,chrN] [-regions file chrFiledID leftFieldID rightFieldID]' % argv[0]
         print '\Note: the -regions option and the -chr option will be integrated if both run, i.e. only the regions within the wanted chromosomes will be used'
         sys.exit(1)
 
     doChr = False
-    if '-chr' in sys.argv:
+    if '-chr' in argv:
         doChr = True
-        chromosomes = sys.argv[sys.argv.index('-chr') + 1].split(',')
+        chromosomes = argv[argv.index('-chr') + 1].split(',')
         WantedDict = {}
         for chr in chromosomes:
             WantedDict[chr] = ''
 
     doRegions = False
-    if '-regions' in sys.argv:
+    if '-regions' in argv:
         doRegions = True
-        regionsFile = sys.argv[sys.argv.index('-regions') + 1]
-        regionsChr = int(sys.argv[sys.argv.index('-regions') + 2])
-        regionsLeft = int(sys.argv[sys.argv.index('-regions') + 3])
-        regionsRight = int(sys.argv[sys.argv.index('-regions') + 4])
+        regionsFile = argv[argv.index('-regions') + 1]
+        regionsChr = int(argv[argv.index('-regions') + 2])
+        regionsLeft = int(argv[argv.index('-regions') + 3])
+        regionsRight = int(argv[argv.index('-regions') + 4])
         linelist = open(regionsFile)
         Regions = []
         for line in linelist:
@@ -84,8 +84,8 @@ def run():
             else:
                 Regions.append((chr,left,right))
     
-    BAM = sys.argv[1]
-    chrominfo=sys.argv[2]
+    BAM = argv[1]
+    chrominfo=argv[2]
     chromInfoList=[]
     linelist=open(chrominfo)
     for line in linelist:
@@ -98,16 +98,16 @@ def run():
                 chromInfoList.append((chr,start,end))
         else:
             chromInfoList.append((chr,start,end))
-    outfilename = sys.argv[3]
+    outfilename = argv[3]
 
     noMulti = False
-    if '-nomulti' in sys.argv:
+    if '-nomulti' in argv:
         noMulti = True
 
     doFirstN = False
-    if '-firstN' in sys.argv:
+    if '-firstN' in argv:
         doFirstN = True
-        FN = int(sys.argv[sys.argv.index('-firstN') + 1])
+        FN = int(argv[argv.index('-firstN') + 1])
 
     InsertLengthDistribution = {}
     InsertLengthDistribution['singleton'] = 0
@@ -212,4 +212,5 @@ def run():
 
     outfile.close()
             
-run()
+if __name__ == '__main__':
+    main(sys.argv)
