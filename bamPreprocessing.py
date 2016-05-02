@@ -12,16 +12,16 @@ import sys
 import pysam
 
 
-def main(argv=None):
+def main(argv):
 
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s BAMfilename outputfilename' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s BAMfilename outputfilename' % argv[0]
         print '       BAM file has to be indexed'
         sys.exit(1)
 
-    BAM = sys.argv[1]
-    outputfilename = sys.argv[2]
+    BAM = argv[1]
+    outputfilename = argv[2]
 
     samfile = pysam.Samfile(BAM, "rb" )
     readMultiplicityDict = getReadMultiplicity(samfile)

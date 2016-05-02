@@ -20,10 +20,10 @@ def getReverseComplement(preliminarysequence):
         sequence=sequence+DNA[preliminarysequence[len(preliminarysequence)-i-1]]
     return sequence
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s BAM chrom.sizes outfilename [-ignoreChromSizes] [-OneEndOnly 1 2] [-alignedOnly] [-chr chrN1[,....,chrNN]] [-withinRegions regions_file chrFieldID leftFieldID rightFieldID] [-noNH samtools]' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s BAM chrom.sizes outfilename [-ignoreChromSizes] [-OneEndOnly 1 2] [-alignedOnly] [-chr chrN1[,....,chrNN]] [-withinRegions regions_file chrFieldID leftFieldID rightFieldID] [-noNH samtools]' % argv[0]
         print '\tNote: the script assumes no duplicate readIDs'
         print '\t-withinRegions option does not work together with the -ignoreChromSizes option'
         print '\tuse the -ignoreChromSizes option to also get the unaligned reads'
@@ -32,9 +32,9 @@ def run():
         print '\tuse - for outfilename if you want to print to standard output'
         sys.exit(1)
 
-    BAM = sys.argv[1]
-    outputfilename = sys.argv[3]
-    chrominfo=sys.argv[2]
+    BAM = argv[1]
+    outputfilename = argv[3]
+    chrominfo=argv[2]
     chromInfoList=[]
     linelist=open(chrominfo)
     for line in linelist:
@@ -49,28 +49,28 @@ def run():
         doStdOut = True
 
     doEnd = False
-    if '-OneEndOnly' in sys.argv:
+    if '-OneEndOnly' in argv:
         doEnd = True
-        End = int(sys.argv[sys.argv.index('-OneEndOnly')+1])
+        End = int(argv[argv.index('-OneEndOnly')+1])
 
     doChr=False
-    if '-chr' in sys.argv:
+    if '-chr' in argv:
         doChr=True
         WantedChrDict={}
-        for chr in sys.argv[sys.argv.index('-chr')+1].split(','):
+        for chr in argv[argv.index('-chr')+1].split(','):
             WantedChrDict[chr]=''
         if not doStdOut:
             print 'will output all reads aligning to the following chromosomes:'
             print WantedChrDict.keys()
 
     doIgnoreChromSizes=False
-    if '-ignoreChromSizes' in sys.argv:
+    if '-ignoreChromSizes' in argv:
         doIgnoreChromSizes=True
         if not doStdOut:
             print 'will ignore chrom.sizes file'
 
     doAlignedOnly=False
-    if '-alignedOnly' in sys.argv:
+    if '-alignedOnly' in argv:
         doAlignedOnly=True
         if not doStdOut:
             print 'will only output aligned reads'
@@ -88,10 +88,10 @@ def run():
                 print 'file has NH tags'
             break
     except:
-        if '-noNH' in sys.argv:
+        if '-noNH' in argv:
             print 'no NH: tags in BAM file, will replace with a new BAM file with NH tags'
-            samtools = sys.argv[sys.argv.index('-noNH')+1]
-            BAMpreporcessingScript = sys.argv[0].rpartition('/')[0] + '/bamPreprocessing.py'
+            samtools = argv[argv.index('-noNH')+1]
+            BAMpreporcessingScript = argv[0].rpartition('/')[0] + '/bamPreprocessing.py'
             cmd = 'python ' + BAMpreporcessingScript + ' ' + BAM + ' ' + BAM + '.NH'
             os.system(cmd)
             cmd = 'rm ' + BAM
@@ -226,14 +226,14 @@ def run():
                         pass
                 else:
                     ReadDict[ID] = (sequence,quality)
-    elif '-withinRegions' in sys.argv:
+    elif '-withinRegions' in argv:
         regionDict={}
         if not doStdOut:
-            print 'will only output reads with alignments within regions defined in', sys.argv[sys.argv.index('-withinRegions')+1]
-        linelist = open(sys.argv[sys.argv.index('-withinRegions')+1])
-        chrFieldID = int(sys.argv[sys.argv.index('-withinRegions')+2])
-        leftFieldID = int(sys.argv[sys.argv.index('-withinRegions')+3])
-        rightFieldID = int(sys.argv[sys.argv.index('-withinRegions')+4])
+            print 'will only output reads with alignments within regions defined in', argv[argv.index('-withinRegions')+1]
+        linelist = open(argv[argv.index('-withinRegions')+1])
+        chrFieldID = int(argv[argv.index('-withinRegions')+2])
+        leftFieldID = int(argv[argv.index('-withinRegions')+3])
+        rightFieldID = int(argv[argv.index('-withinRegions')+4])
         for line in linelist:
             if line.startswith('#'):
                 continue
@@ -364,5 +364,6 @@ def run():
             print '+'
             print quality
 
-run()
+if __name__ == '__main__':
+    main(sys.argv)
 

@@ -37,22 +37,22 @@ def FLAG(FLAG):
   
     return FLAGList
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 2:
-        print 'usage: python %s SAMfilename outputfilename [-bam chrom.sizes samtools] [-paired]' % sys.argv[0]
+    if len(argv) < 2:
+        print 'usage: python %s SAMfilename outputfilename [-bam chrom.sizes samtools] [-paired]' % argv[0]
         print '       BAM file has to be indexed'
         print '       Complexity will be calculated only for BAM files'
         sys.exit(1)
 
-    SAM = sys.argv[1]
-    outputfilename = sys.argv[2]
+    SAM = argv[1]
+    outputfilename = argv[2]
 
     doBAM=False
-    if '-bam' in sys.argv:
+    if '-bam' in argv:
         doBAM=True
-        chrominfo=sys.argv[sys.argv.index('-bam')+1]
-        samtools=sys.argv[sys.argv.index('-bam')+2]
+        chrominfo=argv[argv.index('-bam')+1]
+        samtools=argv[argv.index('-bam')+2]
         chromInfoList=[]
         linelist=open(chrominfo)
         for line in linelist:
@@ -70,7 +70,7 @@ def run():
                 break
         except:
             print 'no NH: tags in BAM file, will replace with a new BAM file with NH tags'
-            BAMpreporcessingScript = sys.argv[0].rpartition('/')[0] + '/bamPreprocessing.py'
+            BAMpreporcessingScript = argv[0].rpartition('/')[0] + '/bamPreprocessing.py'
             cmd = 'python ' + BAMpreporcessingScript + ' ' + SAM + ' ' + SAM + '.NH'
             os.system(cmd)
             cmd = 'rm ' + SAM
@@ -90,7 +90,7 @@ def run():
     SeenDict={}
     SeenTwiceDict={}
     doPaired=False
-    if '-paired' in sys.argv:
+    if '-paired' in argv:
         doPaired=True
         print 'will treat reads as paired'
         SeenDictPaired={}
@@ -304,4 +304,5 @@ def run():
              
     outfile.close()
 
-run()
+if __name__ == '__main__':
+    main(sys.argv)

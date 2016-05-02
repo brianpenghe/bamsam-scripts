@@ -13,19 +13,19 @@ from sets import Set
 import os
 import subprocess
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s BAM samtools fields_to_be_retained' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s BAM samtools fields_to_be_retained' % argv[0]
         print '\tfields to be retained format: comma separated, or from:to (including)'
         print '\tthe script will print to standard output - capture it with samtools and direct it to a bam file'
         print '\tspaces in optional fields will be treated as tabs'
         sys.exit(1)
 
-    BAM = sys.argv[1]
-    samtools = sys.argv[2]
+    BAM = argv[1]
+    samtools = argv[2]
     fieldIDs = []
-    fields = sys.argv[3].split(',')
+    fields = argv[3].split(',')
     for IDs in fields:
         if ':' in IDs:
             start = int(IDs.split(':')[0])
@@ -64,4 +64,5 @@ def run():
             outline = outline + newfields[ID] + '\t'
         print outline.strip()
     
-run()
+if __name__ == '__main__':
+    main(sys.argv)

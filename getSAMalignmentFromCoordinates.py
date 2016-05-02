@@ -11,22 +11,22 @@ import string
 import math
 from commoncode import *
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s bedfilename SAMfilename outputfilename [-chr chrN1,chrN2...,chrNx]' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s bedfilename SAMfilename outputfilename [-chr chrN1,chrN2...,chrNx]' % argv[0]
         sys.exit(1)
     
-    bed = sys.argv[1]
-    SAM = sys.argv[2]
-    outfilename = sys.argv[3]
+    bed = argv[1]
+    SAM = argv[2]
+    outfilename = argv[3]
 
     wantedDict={}
 
     doChr=False
-    if '-chr' in sys.argv:
+    if '-chr' in argv:
         doChr=True
-        ChrList=sys.argv[sys.argv.index('-chr')+1].split(',')
+        ChrList=argv[argv.index('-chr')+1].split(',')
         WantedChrDict={}
         for chr in ChrList:
             WantedChrDict[chr]=''
@@ -74,4 +74,5 @@ def run():
            
     outfile.close()
    
-run()
+if __name__ == '__main__':
+    main(sys.argv)

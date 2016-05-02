@@ -12,22 +12,22 @@ import math
 import os
 import subprocess
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 5:
+    if len(argv) < 5:
         print 'usage: python %s samtools BAM1 chromosome1 BAM2 chromosome2'
         print '\tchromosomes should be comma-separated'
         print '\tthe script will print to stdout by default'
         sys.exit(1)
 
-    samtools = sys.argv[1]
-    BAM1 = sys.argv[2]
+    samtools = argv[1]
+    BAM1 = argv[2]
     chrDict1 = {}
-    for chr in sys.argv[3].split(','):
+    for chr in argv[3].split(','):
         chrDict1[chr]=1
-    BAM2 = sys.argv[4]
+    BAM2 = argv[4]
     chrDict2 = {}
-    for chr in sys.argv[5].split(','):
+    for chr in argv[5].split(','):
         chrDict2[chr]=1
 
     cmd1 = samtools + ' view ' + BAM1
@@ -54,4 +54,5 @@ def run():
         if chrDict2.has_key(chr):
             print line.strip()
         
-run()
+if __name__ == '__main__':
+    main(sys.argv)

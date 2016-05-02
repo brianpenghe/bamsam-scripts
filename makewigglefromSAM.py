@@ -10,10 +10,10 @@ import sys
 import string
 import pysam
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s title SAMfilename outputfilename [-stranded + | -] [-nomulti] [-noNH] [-multiReadCorrection] [-RPM] [-notitle] [-bam chrom.sizes] [-singlebasepair] [-chr chrN1(,chrN2....)]' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s title SAMfilename outputfilename [-stranded + | -] [-nomulti] [-noNH] [-multiReadCorrection] [-RPM] [-notitle] [-bam chrom.sizes] [-singlebasepair] [-chr chrN1(,chrN2....)]' % argv[0]
         print '       Note: the script is designed to work with constant length reads; if the read length varies, then the weighted average of the length will be used'
         print '       Note: only run it on BAM files with NH filed indicating multiread multiplicity present; the -noNH option does not work on BAM files'
         print '       Note: -multiReadCorrection option deprecated and correcting for multireads is the default now'
@@ -23,28 +23,28 @@ def run():
     cachePages = 2000000
 
     doSingleBP=False
-    if '-singlebasepair' in sys.argv:
+    if '-singlebasepair' in argv:
         doSingleBP=True
 
     doTitle=True
-    if '-notitle' in sys.argv:
+    if '-notitle' in argv:
         doTitle=False
 
-    title = sys.argv[1]
-    SAM = sys.argv[2]
-    outfilename = sys.argv[3]
+    title = argv[1]
+    SAM = argv[2]
+    outfilename = argv[3]
 
     doChrSubset=False
-    if '-chr' in sys.argv:
+    if '-chr' in argv:
         doChrSubset=True
         WantedChrDict={}
-        for chr in sys.argv[sys.argv.index('-chr')+1].split(','):
+        for chr in argv[argv.index('-chr')+1].split(','):
             WantedChrDict[chr]=''
 
     doBAM=False
-    if '-bam' in sys.argv:
+    if '-bam' in argv:
         doBAM=True
-        chrominfo=sys.argv[sys.argv.index('-bam')+1]
+        chrominfo=argv[argv.index('-bam')+1]
         chromInfoList=[]
         linelist=open(chrominfo)
         for line in linelist:
@@ -55,17 +55,17 @@ def run():
             chromInfoList.append((chr,start,end))
 
     noMulti=False
-    if '-nomulti' in sys.argv:
+    if '-nomulti' in argv:
         noMulti=True
 
     doRPM=False
-    if '-RPM' in sys.argv:
+    if '-RPM' in argv:
         doRPM=True
 
     multireads=0
 
     noNH=False
-    if '-noNH' in sys.argv:
+    if '-noNH' in argv:
         noNH=True
         CorrectionDict={}
         CorrectionDict['paired']={}
@@ -124,9 +124,9 @@ def run():
                     CorrectionDict['single'][ID]+=1
 
     doStranded=False
-    if '-stranded' in sys.argv:
+    if '-stranded' in argv:
          doStranded=True
-         strand=sys.argv[sys.argv.index('-stranded')+1]
+         strand=argv[argv.index('-stranded')+1]
          print 'will only consider', strand, 'strand reads'
 
     coverageDict={}
@@ -331,4 +331,5 @@ def run():
 
     outfile.close()
             
-run()
+if __name__ == '__main__':
+    main(sys.argv)

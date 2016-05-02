@@ -10,16 +10,16 @@ import sys
 import pysam
 from sets import Set
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s BAM chrom.size outputfilename' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s BAM chrom.size outputfilename' % argv[0]
         print '       BAM file has to be indexed'
         sys.exit(1)
 
-    BAM = sys.argv[1]
-    outputfilename = sys.argv[3]
-    chrominfo=sys.argv[2]
+    BAM = argv[1]
+    outputfilename = argv[3]
+    chrominfo=argv[2]
     chromInfoList=[]
     linelist=open(chrominfo)
     for line in linelist:
@@ -53,4 +53,5 @@ def run():
              
     outfile.close()
 
-run()
+if __name__ == '__main__':
+    main(sys.argv)

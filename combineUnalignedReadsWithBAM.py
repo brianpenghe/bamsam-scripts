@@ -12,24 +12,24 @@ import string
 import os
 import subprocess
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s samtools BAM unaligned_reads [-compression bzip2 | gunzip | none]' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s samtools BAM unaligned_reads [-compression bzip2 | gunzip | none]' % argv[0]
         print '\tNote1: BAM file has to be indexed'
         print '\tNote2: the script will check whether the unaligned reads are compressed or not, but it does so relying on their name; if they end with .gz, gunzip will be used, if they end with .bz2, bzip2 will be used, in any other case, an uncompressed file will be assumed; use the -compression option if you want to specify the compression method directly'
         print '\tNote3: the script will print SAM aligments into standard output; couple it with a samtools run into a new BAM file'
         sys.exit(1)
 
-    samtools = sys.argv[1]
-    BAM = sys.argv[2]
-    unaligned = sys.argv[3]
-#    outputfilename = sys.argv[3]
+    samtools = argv[1]
+    BAM = argv[2]
+    unaligned = argv[3]
+#    outputfilename = argv[3]
 
     doCompression = False
-    if '-compression' in sys.argv:
+    if '-compression' in argv:
         doCompression = True
-        compression = sys.argv[sys.argv.index('-compression')+1]
+        compression = argv[argv.index('-compression')+1]
 
 #    outfile = open(outputfilename,'w')
 
@@ -132,4 +132,5 @@ def run():
         
 #    outfile.close()
         
-run()
+if __name__ == '__main__':
+    main(sys.argv)

@@ -47,24 +47,24 @@ def FLAG(FLAG):
   
     return FLAGList
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 4:
-        print 'usage: python %s title BAMfilename chrom.sizes outputfilename [-stranded + | -] [-nomulti] [-RPM] [-notitle] [-shift bp] [-mismatchesMD M] [-singlebasepair] [-mismatches M] [-readLength min max] [-chr chrN1(,chrN2....)] [-uniqueBAM]' % sys.argv[0]
+    if len(argv) < 4:
+        print 'usage: python %s title BAMfilename chrom.sizes outputfilename [-stranded + | -] [-nomulti] [-RPM] [-notitle] [-shift bp] [-mismatchesMD M] [-singlebasepair] [-mismatches M] [-readLength min max] [-chr chrN1(,chrN2....)] [-uniqueBAM]' % argv[0]
         print '       Use the -mismatches option to specify the maximum number of mismatches allowed for an alignment to be considered; use the -mimatchesMD option is mismatches are specified with the MD special tag'
         sys.exit(1)
     
     doSingleBP=False
-    if '-singlebasepair' in sys.argv:
+    if '-singlebasepair' in argv:
         doSingleBP=True
 
     doTitle=True
-    if '-notitle' in sys.argv:
+    if '-notitle' in argv:
         doTitle=False
 
-    title = sys.argv[1]
-    BAM = sys.argv[2]
-    chrominfo=sys.argv[3]
+    title = argv[1]
+    BAM = argv[2]
+    chrominfo=argv[3]
     chromInfoList=[]
     linelist=open(chrominfo)
     for line in linelist:
@@ -73,57 +73,57 @@ def run():
         start=0
         end=int(fields[1])
         chromInfoList.append((chr,start,end))
-    outfilename = sys.argv[4]
+    outfilename = argv[4]
 
     doReadLength=False
-    if '-readLength' in sys.argv:
+    if '-readLength' in argv:
         doReadLength=True
-        minRL = int(sys.argv[sys.argv.index('-readLength')+1])
-        maxRL = int(sys.argv[sys.argv.index('-readLength')+2])
+        minRL = int(argv[argv.index('-readLength')+1])
+        maxRL = int(argv[argv.index('-readLength')+2])
         print 'will only consider reads between', minRL, 'and', maxRL, 'bp length'
 
     doMaxMMMD=False
-    if '-mismatchesMD' in sys.argv:
+    if '-mismatchesMD' in argv:
         doMaxMMMD=True
-        maxMM = int(sys.argv[sys.argv.index('-mismatchesMD')+1])
+        maxMM = int(argv[argv.index('-mismatchesMD')+1])
         print 'Will only consider alignments with', maxMM, 'or less mismatches'
 
     doMaxMM=False
-    if '-mismatches' in sys.argv:
+    if '-mismatches' in argv:
         doMaxMM=True
-        maxMM = int(sys.argv[sys.argv.index('-mismatches')+1])
+        maxMM = int(argv[argv.index('-mismatches')+1])
         print 'Will only consider alignments with', maxMM, 'or less mismatches'
 
     doChrSubset=False
-    if '-chr' in sys.argv:
+    if '-chr' in argv:
         doChrSubset=True
         WantedChrDict={}
-        for chr in sys.argv[sys.argv.index('-chr')+1].split(','):
+        for chr in argv[argv.index('-chr')+1].split(','):
             WantedChrDict[chr]=''
 
     doShift=False
-    if '-shift' in sys.argv:
+    if '-shift' in argv:
         doShift=True
-        shift = int(sys.argv[sys.argv.index('-shift')+1])
+        shift = int(argv[argv.index('-shift')+1])
         print 'Will shfit reads by ', shift, 'bp'
 
     noMulti=False
-    if '-nomulti' in sys.argv:
+    if '-nomulti' in argv:
         print 'will only consider unique alignments'
         noMulti=True
 
     doRPM=False
-    if '-RPM' in sys.argv:
+    if '-RPM' in argv:
         doRPM=True
 
     doStranded=False
-    if '-stranded' in sys.argv:
+    if '-stranded' in argv:
         doStranded=True
-        strand=sys.argv[sys.argv.index('-stranded')+1]
+        strand=argv[argv.index('-stranded')+1]
         print 'will only consider', strand, 'strand reads'
 
     doUniqueBAM = False
-    if '-uniqueBAM' in sys.argv:
+    if '-uniqueBAM' in argv:
         print 'will treat all alignments as unique'
         doUniqueBAM = True
         TotalReads = 0
@@ -326,4 +326,5 @@ def run():
 
     outfile.close()
             
-run()
+if __name__ == '__main__':
+    main(sys.argv)

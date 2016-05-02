@@ -11,16 +11,16 @@ import os
 import pysam
 import string
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 4:
-        print 'usage: python %s BAM samtools max_multiplcity outfilename' % sys.argv[0]
+    if len(argv) < 4:
+        print 'usage: python %s BAM samtools max_multiplcity outfilename' % argv[0]
         sys.exit(1)
 
-    BAM = sys.argv[1]
-    samtools=sys.argv[2]
-    M = int(sys.argv[3])
-    outputfilename = sys.argv[4]
+    BAM = argv[1]
+    samtools=argv[2]
+    M = int(argv[3])
+    outputfilename = argv[4]
 #    chromInfoList=[]
 #    linelist=open(chrominfo)
 #    for line in linelist:
@@ -31,7 +31,7 @@ def run():
 #        chromInfoList.append((chr,start,end))
 
 #    doIgnoreChromSizes=False
-#    if '-ignoreChromSizes' in sys.argv:
+#    if '-ignoreChromSizes' in argv:
 #        doIgnoreChromSizes=True
 #        print 'will ignore chrom.sizes file'
 
@@ -50,7 +50,7 @@ def run():
                 break
     except:
         print 'no NH: tags in BAM file, will replace with a new BAM file with NH tags'
-        BAMpreporcessingScript = sys.argv[0].rpartition('/')[0] + '/bamPreprocessing.py'
+        BAMpreporcessingScript = argv[0].rpartition('/')[0] + '/bamPreprocessing.py'
         cmd = 'python ' + BAMpreporcessingScript + ' ' + BAM + ' ' + BAM + '.NH'
         os.system(cmd)
         cmd = 'rm ' + BAM
@@ -156,5 +156,6 @@ def run():
 
     outfile.close()
 
-run()
+if __name__ == '__main__':
+    main(sys.argv)
 

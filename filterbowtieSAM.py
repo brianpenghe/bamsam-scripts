@@ -14,16 +14,16 @@ try:
 except:
 	pass
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s SAM <max multiplicity> outfilename ' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s SAM <max multiplicity> outfilename ' % argv[0]
         print '       ONLY USE THIS SCRIPT FOR SINGLE-END DATA!!!!'
         sys.exit(1)
 
-    inputfilename = sys.argv[1]
-    M = int(sys.argv[2])
-    outputfilename = sys.argv[3]
+    inputfilename = argv[1]
+    M = int(argv[2])
+    outputfilename = argv[3]
 
     ReadDict={}
 
@@ -72,5 +72,6 @@ def run():
     outfile.close()
 
 
-run()
+if __name__ == '__main__':
+    main(sys.argv)
 

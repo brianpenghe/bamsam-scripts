@@ -11,16 +11,16 @@ import os
 import pysam
 from sets import Set
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 3:
-        print 'usage: python %s BAMfilename samtools outputfilename' % sys.argv[0]
+    if len(argv) < 3:
+        print 'usage: python %s BAMfilename samtools outputfilename' % argv[0]
         print 'BAM file need not be indexed or sorted'
         sys.exit(1)
 
-    SAM = sys.argv[1]
-    samtools = sys.argv[2]
-    outputfilename = sys.argv[3]
+    SAM = argv[1]
+    samtools = argv[2]
+    outputfilename = argv[3]
 
     ReadMultiplicityDict={}
 
@@ -55,4 +55,5 @@ def run():
         outfile.write(ID + '\t' + str(ReadMultiplicityDict[ID]) + '\n')
     outfile.close()
 
-run()
+if __name__ == '__main__':
+    main(sys.argv)

@@ -8,15 +8,15 @@
 
 import sys
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 2:
-        print 'usage: python %s <list of files> outputfilename' % sys.argv[0]
+    if len(argv) < 2:
+        print 'usage: python %s <list of files> outputfilename' % argv[0]
         print '	Format of input file: <lable> <tab> <filename>'
         sys.exit(1)
 
-    input = sys.argv[1]
-    outputfilename = sys.argv[2]
+    input = argv[1]
+    outputfilename = argv[2]
 
     DataDict={}
     LabelList=[]
@@ -61,4 +61,5 @@ def run():
         
     outfile.close()
 
-run()
+if __name__ == '__main__':
+    main(sys.argv)

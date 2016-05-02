@@ -37,10 +37,10 @@ def FLAG(FLAG):
   
     return FLAGList
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 5:
-        print 'usage: python %s bedfilename chrField BAMfilename chrom.sizes outputfilename [-nomulti] [-RPM] [-stranded +|-] [-readLength min max] [-printSum] [-uniqueBAM] [-mappabilityNormalize mappability.wig readLength] [-noNH samtools]' % sys.argv[0]
+    if len(argv) < 5:
+        print 'usage: python %s bedfilename chrField BAMfilename chrom.sizes outputfilename [-nomulti] [-RPM] [-stranded +|-] [-readLength min max] [-printSum] [-uniqueBAM] [-mappabilityNormalize mappability.wig readLength] [-noNH samtools]' % argv[0]
         print 'Note: the script will divide multireads by their multiplicity'
         print '\t-printSum option only working together with the RPM option'
         print '\tuse the uniqueBAM option if the BAM file contains only unique alignments; this will save a lot of memory'
@@ -49,11 +49,11 @@ def run():
         print '\tthe stranded option will normalized against all reads, not just reads on the indicated strand'
         sys.exit(1)
     
-    bed = sys.argv[1]
-    fieldID = int(sys.argv[2])
-    SAM = sys.argv[3]
-    chromSize = sys.argv[4]
-    outfilename = sys.argv[5]
+    bed = argv[1]
+    fieldID = int(argv[2])
+    SAM = argv[3]
+    chromSize = argv[4]
+    outfilename = argv[5]
 
     chromInfoList=[]
     linelist=open(chromSize)
@@ -65,36 +65,36 @@ def run():
         chromInfoList.append((chr,start,end))
 
     noMulti=False
-    if '-nomulti' in sys.argv:
+    if '-nomulti' in argv:
         noMulti=True
         print 'will discard multi-read alignments'
 
     doReadLength=False
-    if '-readLength' in sys.argv:
+    if '-readLength' in argv:
         doReadLength=True
-        minRL = int(sys.argv[sys.argv.index('-readLength')+1])
-        maxRL = int(sys.argv[sys.argv.index('-readLength')+2])
+        minRL = int(argv[argv.index('-readLength')+1])
+        maxRL = int(argv[argv.index('-readLength')+2])
         print 'will only consider reads between', minRL, 'and', maxRL, 'bp length'
         ORLL = 0
 
     doPrintSum=False
 
     doStranded=False
-    if '-stranded' in sys.argv:
+    if '-stranded' in argv:
         doStranded=True
-        thestrand = sys.argv[sys.argv.index('-stranded')+1]
+        thestrand = argv[argv.index('-stranded')+1]
         print 'will only consider', thestrand, 'strand reads'
 
     doRPM=False
-    if '-RPM' in sys.argv:
+    if '-RPM' in argv:
         doRPM=True
         print 'will output RPMs'
-        if '-printSum' in sys.argv:
+        if '-printSum' in argv:
             doPrintSum=True
             RPMSum=0
 
     doUniqueBAM = False
-    if '-uniqueBAM' in sys.argv:
+    if '-uniqueBAM' in argv:
         print 'will treat all alignments as unique'
         doUniqueBAM = True
         TotalReads = 0
@@ -108,10 +108,10 @@ def run():
             print 'file has NH tags'
             break
     except:
-        if '-noNH' in sys.argv:
+        if '-noNH' in argv:
             print 'no NH: tags in BAM file, will replace with a new BAM file with NH tags'
-            samtools = sys.argv[sys.argv.index('-noNH')+1]
-            BAMpreporcessingScript = sys.argv[0].rpartition('/')[0] + '/bamPreprocessing.py'
+            samtools = argv[argv.index('-noNH')+1]
+            BAMpreporcessingScript = argv[0].rpartition('/')[0] + '/bamPreprocessing.py'
             cmd = 'python ' + BAMpreporcessingScript + ' ' + SAM + ' ' + SAM + '.NH'
             os.system(cmd)
             cmd = 'rm ' + SAM
@@ -128,11 +128,11 @@ def run():
                 sys.exit(1)
 
     doMappabilityCorrection = False
-    if not doRPM and '-mappabilityNormalize' in sys.argv:
+    if not doRPM and '-mappabilityNormalize' in argv:
         doMappabilityCorrection = True
         print 'will correct for mappability'
-        mappability = sys.argv[sys.argv.index('-mappabilityNormalize')+1]
-        readLength = int(sys.argv[sys.argv.index('-mappabilityNormalize')+2])
+        mappability = argv[argv.index('-mappabilityNormalize')+1]
+        readLength = int(argv[argv.index('-mappabilityNormalize')+2])
         WantedDict = {}
         MappabilityRegionDict = {}
         lineslist = open(bed)
@@ -333,4 +333,5 @@ def run():
 
     outfile.close()
    
-run()
+if __name__ == '__main__':
+    main(sys.argv)

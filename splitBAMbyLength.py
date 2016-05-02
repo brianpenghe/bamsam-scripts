@@ -11,16 +11,16 @@ from sets import Set
 import pysam
 import string
 
-def run():
+def main(argv):
 
-    if len(sys.argv) < 4:
-        print 'usage: python %s BAM chrom.sizes sizes outfileprefix [-nomulti]' % sys.argv[0]
+    if len(argv) < 4:
+        print 'usage: python %s BAM chrom.sizes sizes outfileprefix [-nomulti]' % argv[0]
         print '\tsizes should be comma-separated and can be in from-to format as well as individual'
         sys.exit(1)
 
-    BAM = sys.argv[1]
-    outfileprefix= sys.argv[4]
-    chrominfo=sys.argv[2]
+    BAM = argv[1]
+    outfileprefix= argv[4]
+    chrominfo=argv[2]
     chromInfoList=[]
     linelist=open(chrominfo)
     for line in linelist:
@@ -31,12 +31,12 @@ def run():
         chromInfoList.append((chr,start,end))
 
     doMulti=True
-    if '-nomulti' in sys.argv:
+    if '-nomulti' in argv:
         doMulti=False
         print 'will ignore multimappers'
 
     samfile = pysam.Samfile(BAM, "rb" )
-    sizes = sys.argv[3].split(',')
+    sizes = argv[3].split(',')
     sizeDict={}
     print sizes
     for size in sizes:
@@ -119,5 +119,6 @@ def run():
         print outfile
         outfile.close()
 
-run()
+if __name__ == '__main__':
+    main(sys.argv)
 
